@@ -1,0 +1,509 @@
+{
+  "title": "HAWK non-contact observation demo",
+  "description": "Actual continuous GNN run. Green bubbles mark sustained safe-distance observation completion, not contact. Aircraft and object are removed after completion; a replacement launches from its base bay after the configured delay and clearance check.",
+  "seed": 7,
+  "mode": "gnn",
+  "config": {
+    "dt": 0.02,
+    "tau": 0.1,
+    "drag_coeff": 1.0,
+    "physics_dt": 0.002,
+    "mass": 1.5,
+    "gravity": 9.81,
+    "air_density": 1.225,
+    "drag_area": 0.06,
+    "thrust_max": 45.0,
+    "thrust_tau": 0.08,
+    "wind": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "body_radius": 0.35,
+    "v_max": 12.0,
+    "a_max": 18.0,
+    "r_dock": 16.0,
+    "min_separation": 5.0,
+    "stand_off_distance": 10.0,
+    "service_duration": 2.0,
+    "n_chasers": 6,
+    "n_targets": 6,
+    "width": 100.0,
+    "depth": 60.0,
+    "height": 80.0,
+    "ground_z": 0.0,
+    "duration": 20.0,
+    "continuous": true,
+    "arrival_interval": 4.0,
+    "max_tracks": 24,
+    "trajectory": "mixed",
+    "chasers_per_target": 1,
+    "recycle_on_service": true,
+    "relaunch_delay": 1.5,
+    "offstage_margin": 40.0,
+    "target_speed_min": 3.0,
+    "target_speed_max": 7.0,
+    "profile_speeds": [],
+    "altitude_min": 20.0,
+    "altitude_max": 60.0,
+    "target_accel_max": 3.0,
+    "turn_accel": 0.5,
+    "turn_frequency": 0.5,
+    "waypoint_period": 4.0,
+    "drift_std": 0.12,
+    "position_noise": 0.08,
+    "velocity_noise": 0.025,
+    "sensor_range": 150.0,
+    "broadcast_range": 150.0,
+    "broadcast_ttl": 1.0,
+    "sigma_base": 0.6,
+    "zem_scale": 0.015,
+    "n_nav": 3.0,
+    "cruise_speed": 12.0,
+    "allocation_period": 0.5
+  },
+  "capture": {
+    "video_frames": 500,
+    "fps": 25,
+    "duration_seconds": 20,
+    "width": 1280,
+    "height": 800,
+    "speed": "1 simulated second per playback second",
+    "renderer": "MuJoCo OpenGL",
+    "audio": false,
+    "overlay": "Recorded-output label replaces live FPS display. No simulated state or events altered."
+  },
+  "camera": {
+    "lookat": [
+      24.0,
+      30.0,
+      26.0
+    ],
+    "distance": 98.0,
+    "azimuth": 135.0,
+    "elevation": -24.0
+  },
+  "preview": {
+    "duration_seconds": 12,
+    "fps": 10,
+    "width": 800,
+    "height": 500
+  },
+  "stills_at_simulation_seconds": {
+    "hawk-tracking.png": 1.8,
+    "hawk-completion.png": 4.24
+  },
+  "events": [
+    {
+      "type": "completion",
+      "time": 3.919754322782662,
+      "chaser_id": 2,
+      "generation": 0,
+      "target_id": 3,
+      "position": [
+        44.08847885943477,
+        23.645915027079987,
+        31.278003144563943
+      ],
+      "target_position": [
+        52.874853106556294,
+        26.59616307646126,
+        27.729137313057457
+      ]
+    },
+    {
+      "type": "completion",
+      "time": 4.001436473437751,
+      "chaser_id": 4,
+      "generation": 0,
+      "target_id": 2,
+      "position": [
+        44.42831751133617,
+        32.47440734572705,
+        35.44283524525704
+      ],
+      "target_position": [
+        51.08983617538897,
+        25.44,
+        33.52196740035812
+      ]
+    },
+    {
+      "type": "completion",
+      "time": 4.155502395768237,
+      "chaser_id": 3,
+      "generation": 0,
+      "target_id": 1,
+      "position": [
+        42.9703058683675,
+        24.292369826945183,
+        52.038975020522045
+      ],
+      "target_position": [
+        49.38441949698089,
+        16.32,
+        53.12405207855849
+      ]
+    },
+    {
+      "type": "launch",
+      "time": 5.42,
+      "chaser_id": 2,
+      "generation": 1,
+      "target_id": null,
+      "position": [
+        12.0,
+        25.439999999999998,
+        0.44999999999999996
+      ]
+    },
+    {
+      "type": "launch",
+      "time": 5.5200000000000005,
+      "chaser_id": 4,
+      "generation": 1,
+      "target_id": null,
+      "position": [
+        12.0,
+        43.68,
+        0.44999999999999996
+      ]
+    },
+    {
+      "type": "launch",
+      "time": 5.66,
+      "chaser_id": 3,
+      "generation": 1,
+      "target_id": null,
+      "position": [
+        12.0,
+        34.559999999999995,
+        0.44999999999999996
+      ]
+    },
+    {
+      "type": "completion",
+      "time": 6.029833335481585,
+      "chaser_id": 1,
+      "generation": 0,
+      "target_id": 5,
+      "position": [
+        55.89326931554487,
+        43.239881495189124,
+        43.06128304799998
+      ],
+      "target_position": [
+        61.74058604346611,
+        50.05394969554513,
+        42.493455048195436
+      ]
+    },
+    {
+      "type": "completion",
+      "time": 6.033318008526974,
+      "chaser_id": 5,
+      "generation": 0,
+      "target_id": 0,
+      "position": [
+        50.24907556099187,
+        25.653304045124223,
+        33.81710789526688
+      ],
+      "target_position": [
+        55.686515952886374,
+        17.242351557713107,
+        32.09866465134347
+      ]
+    },
+    {
+      "type": "launch",
+      "time": 7.54,
+      "chaser_id": 1,
+      "generation": 1,
+      "target_id": null,
+      "position": [
+        12.0,
+        16.32,
+        0.44999999999999996
+      ]
+    },
+    {
+      "type": "launch",
+      "time": 7.54,
+      "chaser_id": 5,
+      "generation": 1,
+      "target_id": null,
+      "position": [
+        12.0,
+        52.8,
+        0.44999999999999996
+      ]
+    },
+    {
+      "type": "completion",
+      "time": 8.238251422022687,
+      "chaser_id": 0,
+      "generation": 0,
+      "target_id": 4,
+      "position": [
+        47.187065857415895,
+        63.07842833985897,
+        36.80892020208123
+      ],
+      "target_position": [
+        49.849672252558214,
+        72.21265233918945,
+        35.92046254594767
+      ]
+    },
+    {
+      "type": "launch",
+      "time": 9.74,
+      "chaser_id": 0,
+      "generation": 1,
+      "target_id": null,
+      "position": [
+        12.0,
+        7.199999999999999,
+        0.44999999999999996
+      ]
+    },
+    {
+      "type": "completion",
+      "time": 10.432590666399815,
+      "chaser_id": 2,
+      "generation": 1,
+      "target_id": 6,
+      "position": [
+        26.355907917403435,
+        35.32282930368828,
+        36.99823460217962
+      ],
+      "target_position": [
+        25.124646355878692,
+        38.753833075326526,
+        46.384713288222315
+      ]
+    },
+    {
+      "type": "launch",
+      "time": 11.94,
+      "chaser_id": 2,
+      "generation": 2,
+      "target_id": null,
+      "position": [
+        12.0,
+        25.439999999999998,
+        0.44999999999999996
+      ]
+    },
+    {
+      "type": "completion",
+      "time": 12.46565852657438,
+      "chaser_id": 1,
+      "generation": 1,
+      "target_id": 7,
+      "position": [
+        13.302591679841404,
+        19.75103010521722,
+        24.26157933128738
+      ],
+      "target_position": [
+        8.028268040073247,
+        20.9757977581999,
+        32.73162447418876
+      ]
+    },
+    {
+      "type": "launch",
+      "time": 13.98,
+      "chaser_id": 1,
+      "generation": 2,
+      "target_id": null,
+      "position": [
+        12.0,
+        16.32,
+        0.44999999999999996
+      ]
+    },
+    {
+      "type": "completion",
+      "time": 17.31447329753879,
+      "chaser_id": 3,
+      "generation": 1,
+      "target_id": 8,
+      "position": [
+        14.402331271847311,
+        29.719373681927824,
+        34.668559952112695
+      ],
+      "target_position": [
+        10.192653942121671,
+        28.90916537720988,
+        43.77490062809396
+      ]
+    },
+    {
+      "type": "launch",
+      "time": 18.82,
+      "chaser_id": 3,
+      "generation": 2,
+      "target_id": null,
+      "position": [
+        12.0,
+        34.559999999999995,
+        0.44999999999999996
+      ]
+    }
+  ],
+  "result": {
+    "mode": "gnn",
+    "seed": 7,
+    "config": {
+      "dt": 0.02,
+      "tau": 0.1,
+      "drag_coeff": 1.0,
+      "physics_dt": 0.002,
+      "mass": 1.5,
+      "gravity": 9.81,
+      "air_density": 1.225,
+      "drag_area": 0.06,
+      "thrust_max": 45.0,
+      "thrust_tau": 0.08,
+      "wind": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "body_radius": 0.35,
+      "v_max": 12.0,
+      "a_max": 18.0,
+      "r_dock": 16.0,
+      "min_separation": 5.0,
+      "stand_off_distance": 10.0,
+      "service_duration": 2.0,
+      "n_chasers": 6,
+      "n_targets": 6,
+      "width": 100.0,
+      "depth": 60.0,
+      "height": 80.0,
+      "ground_z": 0.0,
+      "duration": 20.0,
+      "continuous": true,
+      "arrival_interval": 4.0,
+      "max_tracks": 24,
+      "trajectory": "mixed",
+      "chasers_per_target": 1,
+      "recycle_on_service": true,
+      "relaunch_delay": 1.5,
+      "offstage_margin": 40.0,
+      "target_speed_min": 3.0,
+      "target_speed_max": 7.0,
+      "profile_speeds": [],
+      "altitude_min": 20.0,
+      "altitude_max": 60.0,
+      "target_accel_max": 3.0,
+      "turn_accel": 0.5,
+      "turn_frequency": 0.5,
+      "waypoint_period": 4.0,
+      "drift_std": 0.12,
+      "position_noise": 0.08,
+      "velocity_noise": 0.025,
+      "sensor_range": 150.0,
+      "broadcast_range": 150.0,
+      "broadcast_ttl": 1.0,
+      "sigma_base": 0.6,
+      "zem_scale": 0.015,
+      "n_nav": 3.0,
+      "cruise_speed": 12.0,
+      "allocation_period": 0.5
+    },
+    "elapsed": 20.0,
+    "serviced": 9,
+    "unserviced": 1,
+    "escaped": 0,
+    "arrivals": 10,
+    "dropped_arrivals": 0,
+    "present": 1,
+    "pending": 1,
+    "reserved": 1,
+    "physics_contacts": 136,
+    "ground_contact_observations": 136,
+    "body_contact_observations": 0,
+    "active_chasers": 6,
+    "retired_chasers": 0,
+    "completed_observers": 9,
+    "relaunches": 9,
+    "departures": 9,
+    "launches": 9,
+    "redundant_consumptions": 0,
+    "minimum_separation": 6.683768889082922,
+    "minimum_target_separation": 7.223595205976463,
+    "minimum_peer_separation": 6.683768889082922,
+    "near_contact_violations": 0,
+    "mean_service_time": 5.398979827614763,
+    "mean_local_allocation_loss": 0.14816666666666695,
+    "mean_duplicate_commitments": 0.0,
+    "max_duplicate_commitments": 0,
+    "max_capacity_violations": 0,
+    "chasers_per_target": 1,
+    "reservation_model": "shared mission ledger over local policy candidates",
+    "broadcast_packets": 5325,
+    "broadcast_deliveries": 23760,
+    "broadcast_rounds": 1008,
+    "packets_by_sender": {
+      "0": 925,
+      "1": 850,
+      "2": 850,
+      "3": 850,
+      "4": 925,
+      "5": 925
+    },
+    "allocation_epochs": 0,
+    "allocation_rounds": 0,
+    "max_allocation_rounds": 0,
+    "auction_rounds": 0,
+    "gnn_forward_calls": 315,
+    "gnn_forward_wall_seconds": 0.138353,
+    "gnn_compute_wall_seconds": 0.18377,
+    "mean_gnn_forward_ms": 0.4392162719297977,
+    "communication_model": "reliable zero-latency simulated mesh; wall compute measured separately",
+    "controller_wall_seconds": 2.9813
+  },
+  "model_sha256": "4da263e0450e030d024132b64da6d19e2965e5ad6d2d4bbd0768b74eea5e9853",
+  "source_sha256": {
+    "sim_engine.py": "20747442aa065d45116ba175d45a30844c81487cd84225ab26f9f47c838d845d",
+    "physics_world.py": "d9bde371f04c46a337ba841452e2fcecfa542fb9e484cfe467ed578c9e79e7de",
+    "swarm_controller.py": "2d73bf0870de7aa7db9a473526e78fae565f8a55c5591bcef515a7ecc1fb8757",
+    "world_renderer.py": "5bed5bb9ba013d392926d6eded3656549ca8d205bba1487fd256a33aafba2f4d",
+    "main.py": "74a848c10f4a64b3a111557a68ace1f5ad3696ebf51e20b4f1eb9bf7b6fdce4e"
+  },
+  "equivalent_launch_command": "./.venv/bin/python main.py --mode gnn --seed 7 --duration 20 --auto-exit",
+  "encoding": "H.264 yuv420p MP4 (faststart), no audio; 96-color GIF",
+  "verification": {
+    "video_full_decode": "passed; all 500 frames decoded with ffmpeg exit 0",
+    "video_duration_seconds": 20.0,
+    "gif_frame_count": 120,
+    "gif_duration_milliseconds": 12000,
+    "visual_review": "Completion still and GIF frames 0, 50, 100 reviewed. Green completion bubbles, ongoing object tracks, and relaunched aircraft visible.",
+    "capture_environment": "SDL dummy display with working MuJoCo OpenGL offscreen context. This does not verify interactive native fullscreen."
+  },
+  "artifacts": {
+    "hawk-tracking.png": {
+      "bytes": 110333,
+      "sha256": "f9b4273fe52fe9ea7753f2e427001fbb5a0935b20ae8bccca193fe32508f34b0"
+    },
+    "hawk-completion.png": {
+      "bytes": 106069,
+      "sha256": "a64a705c6ec744eaa8ae1db348c629b371d61ea659e04bdf5b9b3c5a86eff622"
+    },
+    "hawk-observation-demo.mp4": {
+      "bytes": 729326,
+      "sha256": "c0283601b33110ed938a4adae8b9416ea769cef6eb149e7c1cfaa6558b7c9ede"
+    },
+    "hawk-observation-preview.gif": {
+      "bytes": 1333398,
+      "sha256": "aaa4ba264232b7a6db6ee2b3af8241fbf93a41335e60c42a48996761f3e44a33"
+    }
+  }
+}

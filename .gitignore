@@ -1,0 +1,31 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.cache/
+.DS_Store
+
+# Local credentials and assistant notes are not part of the published project.
+.env
+.env.*
+/MEMORY.md
+
+# Keep reproducible project evidence and the runnable model; other local
+# captures, historical runs, debugging logs and temporary outputs stay local.
+/output/*
+!/output/swarm_gnn_model.pt
+!/output/gnn-training.json
+!/output/benchmark-observer-cycle.json
+!/output/continuous-observer-cycle.json
+!/output/configurable-speeds-cycle.json
+!/output/benchmark-safe-distance.json
+!/output/test-results-publish.txt
+
+# Project scope: autonomous drone swarm testbed only. Keep all project work
+# inside this directory; do not create unrelated documents or invoices.
+# The user removed these artifacts. Do not recreate them. Ignore rules are
+# tracking safeguards, not permission to generate out-of-scope files.
+*.pdf
+/tmp/pdfs/
+/output/pdf/
+/invoices/
