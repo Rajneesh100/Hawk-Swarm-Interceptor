@@ -1,11 +1,16 @@
-# HAWK · Swarm observation simulator
+# HAWK — Python Drone Swarm Simulator with MuJoCo and PyTorch GNN
 
-Watch a fleet of autonomous observers follow moving aerial objects, share the
-work, and launch replacements from a base. HAWK is an interactive Python
-simulation for comparing a PyTorch graph neural network with Greedy and Auction
-allocation in a physical 3D world.
+HAWK is a **3D drone swarm simulator in Python** for multi-agent target tracking
+and task allocation. It combines **MuJoCo physics**, a **PyTorch graph neural
+network (GNN)**, and an interactive **Pygame** view to compare learned allocation
+with Greedy and Auction policies.
 
-![Animated HAWK run showing aerial tracking, green completion bubbles, and replacement launches](docs/media/hawk-observation-preview.gif)
+Watch autonomous observers follow moving aerial objects at a safe distance,
+share the work, and launch replacements from a base. Configure flight paths,
+speeds, separation distances, and continuous arrivals, or run seeded benchmarks
+without a display.
+
+![HAWK Python drone swarm simulation: MuJoCo aerial tracking, green completion bubbles, and base relaunches](docs/media/hawk-observation-preview.gif)
 
 *An actual seed-7 GNN run at normal simulation speed. Green bubbles mark
 completed non-contact observation; replacement observers launch from the base.*
@@ -17,7 +22,24 @@ completed non-contact observation; replacement observers launch from the base.*
 The demo uses MuJoCo OpenGL rendering at 1280 × 800 and 25 FPS, with no audio.
 The animated preview shows its first 12 seconds.
 
-## Run it
+## What you can study
+
+- **Multi-agent task allocation:** compare Greedy, mesh Auction, and GNN
+  preferences under a shared one-observer-per-object reservation rule.
+- **Drone target tracking:** explore safe-distance observation of random,
+  constant-height, weaving, parabolic, and orbiting aerial paths.
+- **Robotics simulation and guidance:** inspect proportional navigation,
+  thrust limits, actuator lag, gravity, drag, and wind in a 3D physics world.
+- **Graph neural networks for swarm robotics:** train a small message-passing
+  policy on simulated local sensor tracks and measure coverage and inference cost.
+
+[Installation](#installation-and-quick-start) ·
+[Configuration](#configuration-reference) ·
+[Allocation benchmarks](#greedy-auction-and-gnn-task-allocation-benchmarks) ·
+[Physics and GNN training](#mujoco-physics-sensor-tracks-and-pytorch-gnn-training) ·
+[Measured results](#recorded-results)
+
+## Installation and quick start
 
 Use **Python 3.11 or newer**:
 
@@ -175,7 +197,7 @@ is an alias for `--chasers-per-object`.
 HUD and benchmark text remain fixed on screen while the camera moves. Pausing
 also freezes the completion and launch animations.
 
-## Compare the policies
+## Greedy, Auction, and GNN task allocation benchmarks
 
 ```bash
 # Visual comparison: identical seeded initial conditions, no new arrivals
@@ -210,7 +232,7 @@ even when the peer graph is disconnected. The GNN does not guarantee unique
 assignments by itself, and the complete system is not fully decentralized.
 Greedy therefore does not deliberately dogpile in the current comparison.
 
-## Physics, sensors, and learning
+## MuJoCo physics, sensor tracks, and PyTorch GNN training
 
 The software-in-the-loop boundary is small: a controller consumes a copied
 local `Observation` and emits its own 3D acceleration request. It never receives
@@ -249,9 +271,12 @@ following, stand-off regulation, and predictive separation control.
 Training uses Adam on randomized sensor snapshots and minimizes service leakage:
 
 ```math
-X=\operatorname{Softmax}(W,\mathrm{targets}),\qquad
+X=\mathrm{Softmax}(W,\mathrm{targets}),\qquad
 L=\sum_j\prod_i\left(1-X_{ij}P_{reach}(i,j)\right).
 ```
+
+Here, `X` is the per-observer assignment probability and `P_reach` is estimated
+reachability. The loss sums each object's probability of remaining unobserved.
 
 ```bash
 # Optional: train a replacement checkpoint and write its report

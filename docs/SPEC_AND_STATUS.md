@@ -101,7 +101,7 @@ Let `clip_norm` limit vector magnitude. The ideal stabilized flight controller
 maps the bounded acceleration request to world-axis thrust:
 
 ```math
-F_{desired}=\operatorname{clip}_{F_{max}}\big[m(\operatorname{clip}_{a_{max}}(a_{cmd})-g_{vec})\big],
+F_{desired}=\mathrm{clip}_{F_{max}}\big[m(\mathrm{clip}_{a_{max}}(a_{cmd})-g_{vec})\big],
 \qquad g_{vec}=[0,0,-g].
 ```
 
@@ -308,7 +308,7 @@ argmax still has no global uniqueness guarantee; the shared ledger provides it.
 Training uses Adam with the service leakage objective:
 
 ```math
-X=\operatorname{Softmax}(W,dim=targets),\qquad
+X=\mathrm{Softmax}(W,\mathrm{dim}=\mathrm{targets}),\qquad
 L=\sum_j\prod_i(1-X_{ij}P_{reach}(i,j)).
 ```
 
