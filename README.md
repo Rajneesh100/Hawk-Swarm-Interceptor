@@ -1,19 +1,20 @@
-# HAWK — Python Drone Swarm Simulator with MuJoCo and PyTorch GNN
+# HAWK · Drone Swarm Interception Simulator with MuJoCo and PyTorch GNN
 
-HAWK is a **3D drone swarm simulator in Python** for multi-agent target tracking
+HAWK is a **3D drone swarm simulator in Python** for multi-agent target interception
 and task allocation. It combines **MuJoCo physics**, a **PyTorch graph neural
 network (GNN)**, and an interactive **Pygame** view to compare learned allocation
 with Greedy and Auction policies.
 
-Watch autonomous observers follow moving aerial objects at a safe distance,
-share the work, and launch replacements from a base. Configure flight paths,
-speeds, separation distances, and continuous arrivals, or run seeded benchmarks
-without a display.
+Watch autonomous interceptor drones chase moving target drones, split the
+targets between them, and launch replacements from a base. A target counts as
+intercepted once an interceptor closes inside its interception radius.
+Configure flight paths, speeds, interception distances, and continuous
+arrivals, or run seeded benchmarks without a display.
 
-![HAWK Python drone swarm simulation: MuJoCo aerial tracking, green completion bubbles, and base relaunches](docs/media/hawk-observation-preview.gif)
+![HAWK Python drone swarm simulation: MuJoCo interception, green interception bubbles, and base relaunches](docs/media/hawk-observation-preview.gif)
 
 *An actual seed-7 GNN run at normal simulation speed. Green bubbles mark
-completed non-contact observation; replacement observers launch from the base.*
+intercepted targets; replacement interceptors launch from the base.*
 
 [Watch or download the 20-second video](docs/media/hawk-observation-demo.mp4)
 · [Full-resolution tracking view](docs/media/hawk-tracking.png)
@@ -25,9 +26,9 @@ The animated preview shows its first 12 seconds.
 ## What you can study
 
 - **Multi-agent task allocation:** compare Greedy, mesh Auction, and GNN
-  preferences under a shared one-observer-per-object reservation rule.
-- **Drone target tracking:** explore safe-distance observation of random,
-  constant-height, weaving, parabolic, and orbiting aerial paths.
+  preferences under a shared one-interceptor-per-target reservation rule.
+- **Drone interception:** chase targets flying random, constant-height,
+  weaving, parabolic, and orbiting aerial paths.
 - **Robotics simulation and guidance:** inspect proportional navigation,
   thrust limits, actuator lag, gravity, drag, and wind in a 3D physics world.
 - **Graph neural networks for swarm robotics:** train a small message-passing
@@ -54,7 +55,7 @@ python main.py
 
 The trained checkpoint is included at `output/swarm_gnn_model.pt`, so training
 is optional. The default launch opens a **fullscreen, continuous GNN world**:
-six observers, six initial objects, mixed trajectories, and a new object every
+six interceptors, six initial targets, mixed trajectories, and a new target every
 four simulated seconds. Press **Tab** for settings or **Esc** to quit. Use
 `python main.py --windowed` for a resizable window.
 
@@ -64,27 +65,29 @@ preferred, with a software perspective view when a graphics context is unavailab
 
 ## What happens in the world
 
-1. Objects move through a metre-scaled arena along configurable aerial paths.
-2. Each observer receives noisy local position and velocity estimates, then its
-   policy proposes an object to track.
-3. A reservation service allows **at most one observer per object** in the default
-   mode. Unassigned observers hold position; excess objects remain unassigned
-   and continue flying toward the perimeter.
-4. The same reserved observer must remain **at least 5 m away and within 16 m**
-   for **two continuous seconds**. It aims for a 10 m stand-off distance.
-5. Successful observation removes the pair and plays a green bubble animation.
-   A replacement observer launches from its base pad after at least 1.5 seconds,
+1. Target drones move through a metre-scaled arena along configurable aerial paths.
+2. Each interceptor receives noisy local position and velocity estimates, then
+   its policy proposes a target to chase.
+3. A reservation service allows **at most one interceptor per target** in the
+   default mode. Unassigned interceptors hold position; excess targets remain
+   unassigned and continue flying toward the perimeter.
+4. A target is **intercepted** once its reserved interceptor closes inside the
+   **16 m interception radius** and holds it there for **two continuous
+   seconds**. The interceptor aims for 10 m and keeps at least 5 m of separation
+   so the two never collide.
+5. A successful interception removes the pair and plays a green bubble
+   animation. A replacement interceptor launches from its base pad after at least 1.5 seconds,
    once the pad is clear. The first fleet starts airborne.
 
-An object that reaches the exit perimeter before completion is recorded as
-escaped. **Contact does not count as successful observation.** Safe distance is
-a configurable operating constraint; finite thrust, sensing, and avoidance mean
+A target that reaches the exit perimeter before interception is recorded as
+escaped. **A collision does not count as an interception.** Minimum separation
+is a configurable operating constraint; finite thrust, sensing, and avoidance mean
 the simulation measures violations rather than assuming they cannot happen.
 
-![Three green observation-completion bubbles while the remaining observers continue tracking](docs/media/hawk-completion.png)
+![Three green interception bubbles while the remaining interceptors keep chasing](docs/media/hawk-completion.png)
 
-*Three completed pairs have left the scene. The remaining observers keep
-tracking while replacements wait to launch from clear base pads.*
+*Three intercepted pairs have left the scene. The remaining interceptors keep
+chasing while replacements wait to launch from clear base pads.*
 
 ## Change the experiment
 
@@ -93,15 +96,15 @@ distances. **Apply and restart** starts a new seeded world with those values.
 The profile speed editor works independently of the selected world trajectory,
 so you can tune individual profiles while running Mixed mode.
 
-![HAWK settings with world, speed, and configurable safe-distance controls](docs/images/configurable-safe-distance.png)
+![HAWK settings with world, speed, and configurable interception distance controls](docs/images/configurable-safe-distance.png)
 
-*The settings panel keeps minimum separation, tracking stand-off, and observation
+*The settings panel keeps minimum separation, stand-off, and interception
 radius ordered. This software-rendered example stages an 8 m / 13 m / 19 m band.*
 
-### Speeds and safe distance
+### Speeds and interception distances
 
 ```bash
-# Observer reference speed: 14 m/s; independent object speed bands
+# Interceptor reference speed: 14 m/s; independent target speed bands
 python main.py --chaser-speed 14 --trajectory mixed \
   --profile-speed weave 4 5 --profile-speed constant-height 6 6
 
@@ -111,12 +114,13 @@ python main.py --safe-distance 8
 # Set all three distances explicitly, in metres
 python main.py --safe-distance 8 --stand-off-distance 13 --observation-radius 20
 
-# Constant-height traffic with a different arrival rate and object speed band
+# Constant-height traffic with a different arrival rate and target speed band
 python main.py --trajectory constant-height --target-speed-min 4 \
   --target-speed-max 6 --arrival-interval 3
 ```
 
-Distances must satisfy `minimum < stand-off < observation radius`; minimum
+Distances must satisfy `minimum < stand-off < interception radius`
+(`--observation-radius`); minimum
 separation must also exceed the physical body diameter (0.7 m by default).
 Omitted stand-off and radius values become `max(10, minimum + 5)` and
 `max(16, stand-off + 6)` metres. `--min-separation` is an alias for
@@ -124,7 +128,7 @@ Omitted stand-off and radius values become `max(10, minimum + 5)` and
 
 Speeds must be positive, with minimum no greater than maximum. Repeat
 `--profile-speed PROFILE MIN MAX` for any of the five actual profiles; profiles
-without an override inherit the default object speed band. `--chaser-speed`
+without an override inherit the default target speed band. `--chaser-speed`
 limits the guidance velocity reference, not the force-integrated physical state.
 
 ### Trajectories
@@ -136,7 +140,7 @@ limits the guidance velocity reference, not the force-integrated physical state.
 | `weave` | Forward flight with sinusoidal lateral motion |
 | `parabolic` | Controlled altitude arc that stays above ground |
 | `orbit` | Drifting horizontal orbit followed by outbound flight |
-| `mixed` | Cycle through the five profiles as objects arrive |
+| `mixed` | Cycle through the five profiles as targets arrive |
 
 These are controlled aerial paths, with bounded turning and altitude. The
 default speed band is 3–7 m/s and altitude band is 20–60 m.
@@ -146,33 +150,33 @@ default speed band is 3–7 m/s and altitude band is 20–60 m.
 | Option | Default | Meaning |
 |---|---|---|
 | `--mode` | `gnn` | Live policy: `greedy`, `auction`, or `gnn` |
-| `--chasers`, `--targets` | `6`, `6` | Fleet size and initial object count |
+| `--chasers`, `--targets` | `6`, `6` | Fleet size and initial target count |
 | `--arrival-interval` | `4` s | Time between arrivals in continuous mode |
-| `--max-tracks` | `24` | Bounded physical object pool; full-pool arrivals count as dropped |
-| `--trajectory` | `mixed` | Object motion profile |
-| `--target-speed-min`, `--target-speed-max` | `3`, `7` m/s | Fallback object speed band |
-| `--profile-speed PROFILE MIN MAX` | No overrides | Per-profile object speed band; repeatable |
-| `--chaser-speed` | `12` m/s | Observer cruise and guidance speed limit |
+| `--max-tracks` | `24` | Bounded physical target pool; full-pool arrivals count as dropped |
+| `--trajectory` | `mixed` | Target motion profile |
+| `--target-speed-min`, `--target-speed-max` | `3`, `7` m/s | Fallback target speed band |
+| `--profile-speed PROFILE MIN MAX` | No overrides | Per-profile target speed band; repeatable |
+| `--chaser-speed` | `12` m/s | Interceptor cruise and guidance speed limit |
 | `--safe-distance` | `5` m | Minimum separation, avoidance, and launch-clearance setting |
-| `--stand-off-distance`, `--observation-radius` | Derived; normally `10`, `16` m | Preferred and outer tracking distances |
+| `--stand-off-distance`, `--observation-radius` | Derived; normally `10`, `16` m | Preferred stand-off and outer interception radius |
 | `--relaunch-delay` | `1.5` s | Minimum wait before a replacement launches from a clear pad |
-| `--altitude-min`, `--altitude-max` | `20`, `60` m | Object altitude band |
+| `--altitude-min`, `--altitude-max` | `20`, `60` m | Target altitude band |
 | `--wind X Y Z` | `0 0 0` m/s | World-frame wind vector |
-| `--mass`, `--gravity` | `1.5` kg, `9.81` m/s² | Observer mass and gravity magnitude |
+| `--mass`, `--gravity` | `1.5` kg, `9.81` m/s² | Interceptor mass and gravity magnitude |
 | `--sensor-range`, `--broadcast-range` | `150`, `150` m | Local sensing and peer connectivity |
 | `--seed` | `7` | Reproducible scenario seed |
 | `--model PATH` | `output/swarm_gnn_model.pt` | GNN checkpoint |
 | `--duration` | Until quit live; `35` s headless/benchmark | Simulation-time limit |
 | `--speed` | `1` | Visual playback multiplier; does not change physics timesteps |
 
-For persistent-fleet experiments, `--keep-observers` keeps craft active after
-service and permits a larger reservation cap:
+For persistent-fleet experiments, `--keep-observers` keeps interceptors active
+after an interception and permits a larger reservation cap:
 
 ```bash
 python main.py --keep-observers --chasers 12 --targets 6 --chasers-per-object 2
 ```
 
-The cap is a maximum, not a guarantee of that many available observers. The
+The cap is a maximum, not a guarantee of that many available interceptors. The
 default remove-and-relaunch cycle requires a cap of one. `--chasers-per-target`
 is an alias for `--chasers-per-object`.
 
@@ -217,12 +221,12 @@ python main.py --duration 20 --auto-exit --screenshot output/my-world.png \
 `--modes greedy auction` selects a subset and implies `--benchmark`.
 `coordinated` remains a compatibility alias for `auction`. Headless mode never
 opens a window; screenshots require visual mode. JSON includes effective
-configuration, service counts, capacity/separation violations, classified
+configuration, interception counts, capacity/separation violations, classified
 contacts, message counts, and policy timing.
 
 | Policy | How it proposes assignments |
 |---|---|
-| Greedy | Select the nearest locally eligible object |
+| Greedy | Select the nearest locally eligible target |
 | Auction | Exchange capability bids through the simulated mesh over multiple rounds |
 | GNN | Run a trained, two-layer graph policy on local noisy observations in one forward call per due allocation cycle |
 
@@ -253,11 +257,11 @@ m\dot{\mathbf v} = \mathbf F_{thrust} + m\mathbf g
 ```
 
 Ideal world-axis thrust and angular damping abstract stabilization; attitude
-control and rotor mixing are not modeled. Aerial objects follow prescribed
+control and rotor mixing are not modeled. Target drones follow prescribed
 kinematic paths. This is a research simulation, not a calibrated aircraft model.
 
 Sensor payloads resemble local EKF tracks: relative 3D position and velocity,
-closing speed, time to the observation band, zero-effort miss, and estimated
+closing speed, time to the interception radius, zero-effort miss, and estimated
 reachability. The tracker is simulated and omnidirectional; no camera driver,
 occlusion model, real EKF, or aircraft connection is included.
 
@@ -268,15 +272,15 @@ produce assignment logits; the bundled model has **17,505 parameters**.
 Three-dimensional proportional navigation assists acquisition, with velocity
 following, stand-off regulation, and predictive separation control.
 
-Training uses Adam on randomized sensor snapshots and minimizes service leakage:
+Training uses Adam on randomized sensor snapshots and minimizes missed interceptions:
 
 ```math
 X=\mathrm{Softmax}(W,\mathrm{targets}),\qquad
 L=\sum_j\prod_i\left(1-X_{ij}P_{reach}(i,j)\right).
 ```
 
-Here, `X` is the per-observer assignment probability and `P_reach` is estimated
-reachability. The loss sums each object's probability of remaining unobserved.
+Here, `X` is the per-interceptor assignment probability and `P_reach` is estimated
+reachability. The loss sums each target's probability of not being intercepted.
 
 ```bash
 # Optional: train a replacement checkpoint and write its report
@@ -317,24 +321,24 @@ output/*.json              Selected measured benchmark and training reports
 ## Recorded results
 
 The latest recorded verification on **12 October 2026** passed **111 tests**.
-The suite covers physics, trajectory bounds, safe observation dwell, removal
+The suite covers physics, trajectory bounds, interception dwell, removal
 and base relaunch, identity reuse, reservation capacity, radio state resets,
 neural inference/gradients, configurable distances/speeds, and renderer controls.
 
-Default seed-7 benchmark, six observers and six initial objects, mixed profiles:
+Default seed-7 benchmark, six interceptors and six initial targets, mixed profiles:
 
-| Policy | Observed | Completion time | Minimum measured separation | Capacity violations |
+| Policy | Intercepted | Completion time | Minimum measured separation | Capacity violations |
 |---|---:|---:|---:|---:|
 | Greedy | 6/6 | 4.28 s | 6.714 m | 0 |
 | Auction | 6/6 | 4.28 s | 6.749 m | 0 |
 | GNN | 6/6 | 8.24 s | 6.697 m | 0 |
 
-The **120-second continuous GNN run observed 35/35 objects**, removed 35 pairs,
+The **120-second continuous GNN run intercepted 35/35 targets**, removed 35 pairs,
 and launched 34 replacements before the cutoff. It recorded no escaped or
-dropped objects, capacity violations, below-minimum separation entries, or
-body contacts. The custom-distance benchmark (6 m / 11 m / 17 m) also observed
+dropped targets, capacity violations, below-minimum separation entries, or
+body contacts. The custom-distance benchmark (6 m / 11 m / 17 m) also intercepted
 6/6 in each mode. Ground-pad support contacts are counted separately from
-craft/craft and craft/object contacts.
+craft/craft and craft/target contacts.
 
 These are specific measured scenarios, not a guarantee for every configuration
 or evidence that the GNN outperforms the classical policies. The GNN was slower
@@ -348,7 +352,7 @@ Evidence: [default comparison](output/benchmark-observer-cycle.json),
 [test log](output/test-results-publish.txt).
 
 The recorded 20-second demo used offscreen MuJoCo OpenGL successfully: 10
-arrivals, nine observations, nine replacements, and one object still pending
+arrivals, nine interceptions, nine replacements, and one target still pending
 at the cutoff, with no escapes, capacity violations, or below-minimum separation
 entries. The recording contains 500 frames played at 25 FPS; this is not a
 real-time performance measurement.
